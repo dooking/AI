@@ -12,8 +12,12 @@ int omok_winner(void);
 void omok_user(int, int*, int*);
 void omok_computer(int, int*, int*);
 void omok_play(int, int, int);
+void omok_min(int , int , int , int)
+void omok_max(int , int , int , int)
+void omok_utility(int , int ,int);
 int board[20][20] = {0, };
-
+int alpha = -10000000;
+int beta = +10000000;
 int main(void) {
 	int player,winner = 0;
 	int color = BLACK;
@@ -352,42 +356,167 @@ void omok_user(int color, int *x, int *y)
 }
 void omok_computer(int color, int* x, int* y)
 {
-	for (int depth = 0; depth < 5; depth++) {
-		
-		x,y = omok_max(depth)
-		
-		omok_min()
-
+	if (color == WHITE) {
+		*x = omok_max(5, x, y, WHITE);
+	}
+	else {
+		*y = omok_max(5,x, y, BLACK);
 	}
 }
-void omok_max(depth) {
-	if (count == depth) return omok_utility(x,y);
-	v = -10000000000;
+void omok_max(int depth,int maxX,int maxY, int color) {
+	if (count == depth) return omok_utility(maxX,maxY,color);
+	v = -10000000;
+	int count = 0;
 	for(int i=0;; i<20; i++)
 		for(int j=0; j<20; j++)
 			if (board[i][j] == WHITE || BLACK) {
-				v = omok_min(i-1, j-1)
-				v = omok_min(i-1, j)
-				v = omok_min(i-1, j+1)
-				v = omok_min(i, j-1)
-				v = omok_min(i, j+1)
-				v = omok_min(i+1, j-1)
-				v = omok_min(i+1, j)
-				v = omok_min(i+1, j+1)
-				if (v >= B) return v;
-				a = max(a, v);
+				v = omok_min(count +1,i-1, j-1)
+				if (v >= beta) return v;
+				v = omok_min(count + 1, i-1, j)
+				if (v >= beta) return v;
+				v = omok_min(count + 1, i-1, j+1)
+				if (v >= beta) return v;
+				v = omok_min(count + 1, i, j-1)
+				if (v >= beta) return v;
+				v = omok_min(count + 1, i, j+1)
+				if (v >= beta) return v;
+				v = omok_min(count + 1, i+1, j-1)
+				if (v >= beta) return v;
+				v = omok_min(count + 1, i+1, j)
+				if (v >= beta) return v;
+				v = omok_min(count + 1, i+1, j+1)
+				if (v >= beta) return v;
+				alpha = max(alpha, v);
 				return v;
 			}
 }
-void omok_max() {
-	if (¸¶¹«¸®) return Utility;
-	v = -10000000000;
+void omok_min(int depth,int minX,int minY,int color) {
+	if (count == depth) return omok_utility(minX, minY,color);
+	v = +10000000;
 	for (int i = 0;; i < 20; i++)
 		for (int j = 0; j < 20; j++)
 			if (board[i][j] == WHITE || BLACK) {
-				v = omok_min(i, j)
-					if (v >= B) return v;
-				a = max(a, v);
+				v = omok_max(count + 1, i - 1, j - 1)
+				if (v <= alpha) return v;
+				v = omok_max(count + 1, i - 1, j)
+				if (v <= alpha) return v;
+				v = omok_max(count + 1, i - 1, j + 1)
+				if (v <= alpha) return v;
+				v = omok_max(count + 1, i, j - 1)
+				if (v <= alpha) return v;
+				v = omok_max(count + 1, i, j + 1)
+				if (v <= alpha) return v;
+				v = omok_max(count + 1, i + 1, j - 1)
+				if (v <= alpha) return v;
+				v = omok_max(count + 1, i + 1, j)
+				if (v <= alpha) return v;
+				v = omok_max(count + 1, i + 1, j + 1)
+				if (v <= alpha) return v;
+				beta = min(alpha, v);
 				return v;
 			}
 }
+void omok_utility(int dx, int dy,int color) {
+	int exp[8] = { 0, };
+	int computer = color;
+	int human = abs(3 - color);
+	for (int dir = 0; dir <= 7; dir++) {
+		di = dx;
+		dj = dy;
+		while (1) {
+			if (di - 1 >= 1 && dir == 0 && board[di - 1][dj] == computer) {
+				exp[dir] += 1;
+				di = di - 1;
+			}
+			else if (exp[dir] == 4) return 100000;
+			else break;
+		}
+		cnt = 1;
+		di = i;
+		dj = j;
+		while (1) {
+			if (dj + 1 <= 20 && dir == 2 && board[di][dj + 1] == WHITE) {
+				cnt += 1;
+				dj = dj + 1;
+			}
+			else if (cnt == 5) return WHITE;
+			else break;
+		}
+		cnt = 1;
+		di = i;
+		dj = j;
+		while (1) {
+			if (di + 1 <= 20 && dir == 3 && board[di + 1][dj] == WHITE) {
+				cnt += 1;
+				di = di + 1;
+			}
+			else if (cnt == 5) return WHITE;
+			else break;
+		}
+		cnt = 1;
+		di = i;
+		dj = j;
+		while (1) {
+			if (dj - 1 >= 1 && dir == 4 && board[di][dj - 1] == WHITE) {
+				cnt += 1;
+				dj = dj - 1;
+
+			}
+			else if (cnt == 5) return WHITE;
+			else break;
+		}
+
+		cnt = 1;
+		di = i;
+		dj = j;
+		while (1) {
+			if (di - 1 >= 1 && dj - 1 >= 1 && dir == 5 && board[di - 1][dj - 1] == WHITE) {
+				cnt += 1;
+				di = di - 1;
+				dj = dj - 1;
+			}
+			else if (cnt == 5) return WHITE;
+			else break;
+		}
+		cnt = 1;
+		di = i;
+		dj = j;
+		while (1) {
+			if (di - 1 >= 1 && dj + 1 <= 20 && dir == 6 && board[di - 1][dj + 1] == WHITE) {
+				cnt += 1;
+				di = di - 1;
+				dj = dj + 1;
+			}
+			else if (cnt == 5) return WHITE;
+			else break;
+		}
+		cnt = 1;
+		di = i;
+		dj = j;
+		while (1) {
+			if (di + 1 <= 20 && dj - 1 >= 1 && dir == 7 && board[di + 1][dj - 1] == WHITE) {
+				cnt += 1;
+				di = di + 1;
+				dj = dj - 1;
+
+			}
+			else if (cnt == 5) return WHITE;
+			else break;
+		}
+		cnt = 1;
+		di = i;
+		dj = j;
+		while (1) {
+			if (di + 1 <= 20 && dj + 1 <= 20 && dir == 8 && board[di + 1][dj + 1] == WHITE) {
+				cnt += 1;
+				di = di + 1;
+				dj = dj + 1;
+			}
+			else if (cnt == 5) return WHITE;
+			else break;
+		}
+	}
+			
+}
+
+
